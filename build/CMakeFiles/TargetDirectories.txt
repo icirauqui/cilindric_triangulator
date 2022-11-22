@@ -1,0 +1,3 @@
+/home/icirauqui/workspace_tfm/cilindric_triangulator/build/CMakeFiles/ciltri.dir
+/home/icirauqui/workspace_tfm/cilindric_triangulator/build/CMakeFiles/edit_cache.dir
+/home/icirauqui/workspace_tfm/cilindric_triangulator/build/CMakeFiles/rebuild_cache.dir
