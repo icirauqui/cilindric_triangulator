@@ -19,9 +19,9 @@ class Viewer {
 
 public:
 
-  Viewer() {
+  Viewer(std::vector<int> color = {255, 255, 255}) {
     viewer_ = new pcl::visualization::PCLVisualizer("3D Viewer");
-    viewer_->setBackgroundColor(0, 0, 0);
+    viewer_->setBackgroundColor(color[0], color[1], color[2]);
     viewer_->addCoordinateSystem(1.0);
     viewer_->initCameraParameters();
   }
@@ -79,7 +79,7 @@ public:
 
 
   void add_polygons(std::vector<std::vector<Point3D>> &tri, 
-                    Eigen::Vector3d color = Eigen::Vector3d(255, 255, 255)) {
+                    std::vector<int> color = {0, 200, 0}) {
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
     std::vector<int> indices = {0, 1, 2, 0};
@@ -101,7 +101,7 @@ public:
       }
 
       pcl::PointCloud<pcl::PointXYZ>::ConstPtr polygon = poly_;
-      viewer_->addPolygon<pcl::PointXYZ>(polygon, 0.0, 1.0, 0.0, id_poly, 0);
+      viewer_->addPolygon<pcl::PointXYZ>(polygon, color[0]/255.0, color[1]/255.0, color[2]/255.0, id_poly, 0);
     }
   }
 

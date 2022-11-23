@@ -86,7 +86,7 @@ int main() {
     tri = mm.Triangulate();
   }
 
-  ShowPolygons(img_path, tri, points_2d);
+  ShowPolygons(img_path, tri, points_2d, {0,150,0});
 
 
   std::vector<std::vector<Point3D>> points_3d_vis;
@@ -99,7 +99,7 @@ int main() {
   }
 
   Viewer v;
-  v.add_polygons(points_3d_vis);
+  v.add_polygons(points_3d_vis, {0,150,0});
   v.spin();
   
 
@@ -108,7 +108,7 @@ int main() {
 
 
 
-
+  /*
   std::vector<Point3D*> intersect_points_p;
   for (unsigned int i=0; i<intersect_points.size(); i++) {
     int p3d_idx = intersect_points[i].second;
@@ -146,7 +146,7 @@ int main() {
   Viewer v_a;
   v_a.add_polygons(points_3d_vis_a);
   v_a.spin();
-  
+  */
 
 
 
