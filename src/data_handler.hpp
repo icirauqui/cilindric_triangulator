@@ -35,6 +35,58 @@ void StringTrim(std::string* str) {
 
 
 
+
+
+
+void ReadCameras(std::string path, std::vector<Camera>& cameras) {
+  std::ifstream file(path);
+  if (!file.is_open()) {
+    //std::cout << "Unable to open file " << path << std::endl;
+    return;
+  }
+
+  std::string line;
+  std::string item;
+
+  while (std::getline(file, line)) {
+    StringTrim(&line);
+
+    if (line.empty() || line[0] == '#') {
+      continue;
+    }
+
+    std::stringstream line_stream(line);
+
+    Camera camera;
+
+    // ID
+    std::getline(line_stream, item, ' ');
+    camera.camera_id_ = std::stoul(item);
+
+    // MODEL
+    std::getline(line_stream, item, ' ');
+    camera.model_ = item;
+
+    // WIDTH
+    std::getline(line_stream, item, ' ');
+    camera.width_ = std::stoll(item);
+
+    // HEIGHT
+    std::getline(line_stream, item, ' ');
+    camera.height_ = std::stoll(item);
+
+    // PARAMS
+    while (!line_stream.eof()) {
+      std::getline(line_stream, item, ' ');
+      camera.params_.push_back(std::stold(item));
+    }
+
+    cameras.push_back(camera);
+  }
+}
+
+
+
 void ReadImages(std::string path, std::vector<Image>& images) {
 
   std::ifstream file(path);
@@ -209,6 +261,40 @@ void ReadPoints3D(std::string path, std::vector<Point3D>& points) {
     points.push_back(point);
   }
   
+}
+
+
+
+std::vector<Model> ReadModels(std::string path, std::vector<std::string> folders) {
+  std::vector<Model> models;
+
+  for (std::string label : folders) {
+    std::string path_images  = path + label + "/images.txt";
+    std::string path_points  = path + label + "/points3D.txt";
+    std::string path_cameras = path + label + "/cameras.txt";
+
+    std::vector<Image> images;
+    std::vector<Point3D> points3D;
+    std::vector<Camera> cameras;
+
+    ReadCameras(path_cameras, cameras);
+    ReadImages(path_images, images);
+    ReadPoints3D(path_points, points3D);
+    
+    for (Image& image : images) {
+      image.SetParams(cameras[image.camera_id_ - 1].params_);
+    }
+
+    Model model;
+    model.images_ = images;
+    model.points3D_ = points3D;
+    model.cameras_ = cameras;
+
+    model.ComputeIndices();
+    models.push_back(model);
+  }
+
+  return models;
 }
 
 

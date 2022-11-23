@@ -14,27 +14,16 @@
 
 #include "mesh_manager.hpp"
 
+#include "pose.hpp"
+
 
 #include <pcl/ModelCoefficients.h>
 
 
 int main() {
 
-  std::vector<Model> models;
   std::vector<std::string> folders = {"global","16","38"};
-  for (std::string label : folders) {
-      std::string path_images = "../models/" + label + "/images.txt";
-      std::string path_points = "../models/" + label + "/points3D.txt";
-      std::vector<Image> images;
-      std::vector<Point3D> points3D;
-      ReadImages(path_images, images);
-      ReadPoints3D(path_points, points3D);
-      Model model;
-      model.images_ = images;
-      model.points3D_ = points3D;
-      model.ComputeIndices();
-      models.push_back(model);
-  }
+  std::vector<Model> models = ReadModels("../models/", folders);
 
   int m1id = 0;
   int m2id = 1;
@@ -82,7 +71,6 @@ int main() {
     }
   }
 
-
   std::cout << " - Points 2d = " << points_2d.size() << std::endl;
 
   MeshManager mm;
@@ -111,9 +99,58 @@ int main() {
   }
 
   Viewer v;
-  v.add_pc(points_3d_vis, "mesh");
-
+  v.add_polygons(points_3d_vis);
+  v.spin();
   
+
+
+
+
+
+
+
+  std::vector<Point3D*> intersect_points_p;
+  for (unsigned int i=0; i<intersect_points.size(); i++) {
+    int p3d_idx = intersect_points[i].second;
+    Point3D* pp3d = &models[m2id].points3D_[p3d_idx];
+    intersect_points_p.push_back(pp3d);
+  }
+
+  std::vector<std::vector<float>> points_2d_a = Project3DPoints(intersect_points_p, pi);
+
+  MeshManager mm_a;
+  for (unsigned int i=0; i<points_2d_a.size(); i++) {
+    mm_a.vMPsXYZN_.push_back({points_2d_a[i][0], points_2d_a[i][1], 0.0f});
+    mm_a.vbtMPsActive_.push_back(true);
+  }
+
+  std::cout << "Data loaded into MeshManager" << std::endl;
+
+  std::vector<std::vector<int>> tri_a;
+  if (mm_a.LoadMPsIntoCloud()) {
+    tri_a = mm_a.Triangulate();
+  }
+
+  ShowPolygons(img_path, tri_a, points_2d_a);
+
+
+  std::vector<std::vector<Point3D>> points_3d_vis_a;
+  for (unsigned int i=0; i<tri_a.size(); i++) {
+    std::vector<Point3D> p3d_a;
+    for (unsigned int j=0; j<tri_a[i].size(); j++) {
+      p3d_a.push_back(*points_3d[tri_a[i][j]]);
+    }
+    points_3d_vis_a.push_back(p3d_a);
+  }
+
+  Viewer v_a;
+  v_a.add_polygons(points_3d_vis_a);
+  v_a.spin();
+  
+
+
+
+
 
 
 

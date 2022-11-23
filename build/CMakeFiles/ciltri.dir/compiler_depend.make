@@ -2583,8 +2583,35 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
   /usr/local/include/pcl-1.12/pcl/surface/gp3.h \
   /usr/local/include/pcl-1.12/pcl/surface/reconstruction.h \
   /usr/local/include/pcl-1.12/pcl/surface/impl/reconstruction.hpp \
-  /usr/local/include/pcl-1.12/pcl/visualization/vtk.h
+  /usr/local/include/pcl-1.12/pcl/visualization/vtk.h \
+  ../src/pose.hpp \
+  /usr/include/eigen3/Eigen/Eigenvalues \
+  /usr/include/eigen3/Eigen/Geometry \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/ComplexEigenSolver.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
+  /usr/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h
 
+
+/usr/include/eigen3/Eigen/src/Eigenvalues/ComplexEigenSolver.h:
+
+/usr/include/eigen3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h:
+
+/usr/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h:
+
+/usr/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h:
 
 /usr/local/include/pcl-1.12/pcl/surface/reconstruction.h:
 
@@ -3568,6 +3595,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 
 /usr/include/boost/preprocessor/facilities/overload.hpp:
 
+/usr/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h:
+
 /usr/include/boost/fusion/support/sequence_base.hpp:
 
 /usr/include/boost/preprocessor/iteration/detail/bounds/upper1.hpp:
@@ -4342,6 +4371,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 
 /usr/include/boost/type_traits/detail/is_function_cxx_11.hpp:
 
+/usr/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h:
+
 /usr/local/include/opencv4/opencv2/imgproc/segmentation.hpp:
 
 /usr/include/c++/11/debug/debug.h:
@@ -4635,6 +4666,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/lib/gcc/x86_64-linux-gnu/11/include/avx2intrin.h:
 
 /usr/include/boost/smart_ptr/detail/sp_thread_sleep.hpp:
+
+/usr/include/eigen3/Eigen/Eigenvalues:
 
 /usr/include/boost/predef/os/bsd/bsdi.h:
 
@@ -5114,6 +5147,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 
 /usr/local/include/vtk-9.2/vtkAbstractMapper3D.h:
 
+/usr/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h:
+
 /usr/include/strings.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h:
@@ -5301,6 +5336,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/stdint.h:
 
 /usr/include/c++/11/ext/new_allocator.h:
+
+/usr/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h:
 
 /usr/include/boost/fusion/adapted/mpl/detail/category_of_impl.hpp:
 
@@ -6518,6 +6555,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 
 /usr/include/boost/system/error_code.hpp:
 
+/usr/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h:
+
 /usr/local/include/vtk-9.2/vtkDataArrayRange.h:
 
 /usr/local/include/vtk-9.2/vtkDataArrayMeta.h:
@@ -6607,6 +6646,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/boost/atomic/detail/string_ops.hpp:
 
 /usr/include/boost/date_time.hpp:
+
+/usr/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h:
 
 /usr/local/include/pcl-1.12/pcl/io/file_io.h:
 
@@ -7278,6 +7319,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 
 /usr/include/boost/atomic/detail/wait_caps_futex.hpp:
 
+/usr/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h:
+
 /usr/include/boost/atomic/detail/aligned_variable.hpp:
 
 /usr/include/boost/atomic/detail/type_traits/alignment_of.hpp:
@@ -7377,6 +7420,8 @@ CMakeFiles/ciltri.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/boost/config/detail/select_stdlib_config.hpp:
 
 /usr/include/boost/thread/detail/variadic_footer.hpp:
+
+../src/pose.hpp:
 
 /usr/include/boost/thread/exceptional_ptr.hpp:
 

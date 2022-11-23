@@ -39,6 +39,19 @@ class Point3D {
 };
 
 
+class Camera {
+
+  public:
+
+    int camera_id_;
+    int model_id_;
+    int width_;
+    int height_;
+    std::vector<double> params_;
+    std::string model_;
+};
+
+
 class Image {
 
   public:
@@ -48,7 +61,16 @@ class Image {
       tvec_ = Eigen::Vector3d::Zero();
     }
 
-
+    void SetParams(std::vector<double> params) {
+      fx_ = params[0];
+      fy_ = params[1];
+      cx_ = params[2];
+      cy_ = params[3];
+      
+      for (unsigned int i=4; i<params.size(); i++) {
+        dist_.push_back(params[i]);
+      }
+    }
 
     int image_id_;
     int camera_id_;
@@ -57,6 +79,8 @@ class Image {
     double fy_;
     double cx_;
     double cy_;
+    std::vector<double> dist_;
+
     double cam_w_;
     double cam_h_;
 
@@ -84,6 +108,7 @@ class Model {
   public:
     std::vector<Point3D> points3D_;
     std::vector<Image> images_;
+    std::vector<Camera> cameras_;
 
     std::unordered_map<int,int> image_indices_;
 

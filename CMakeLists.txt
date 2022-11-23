@@ -47,6 +47,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 add_executable(ciltri
   src/types.hpp
+  src/pose.hpp
   src/img_vis.hpp
   src/mesh_manager.hpp
   src/utils.hpp
