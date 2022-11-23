@@ -1,0 +1,4 @@
+# Camera list with one line of data per camera:
+#   CAMERA_ID, MODEL, WIDTH, HEIGHT, PARAMS[]
+# Number of cameras: 1
+1 OPENCV_FISHEYE 1440 1080 717.691 718.021 734.728 552.072 -0.139659 -0.000313999 0.0015055 -0.000131671

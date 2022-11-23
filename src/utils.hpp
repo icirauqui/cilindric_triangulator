@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 
+#include <algorithm>
+
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/ModelCoefficients.h>
@@ -92,6 +94,69 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> ORD(std::vector<Point3D>& points) {
     //std::cout << "dir: " << dir << std::endl;
 }
 
+
+
+std::vector<std::pair<int,int>> Find3dIntersect(std::vector<Point3D> pts1, 
+                                                std::vector<Point3D> pts2,
+                                                unsigned int min_matches = 3) {
+  std::vector<std::pair<int,int>> intersect;
+
+  for (unsigned int i=0; i<pts1.size(); i++){
+
+    std::vector<std::pair<int,int>> tr1(pts1[i].track_);
+    std::sort(tr1.begin(), tr1.end(), [](auto &left, auto &right) {
+        return left.second < right.second;
+    });
+        
+    for (unsigned int j=0; j<pts2.size(); j++){
+      std::vector<std::pair<int,int>> tr2(pts2[j].track_);
+
+      std::sort(tr2.begin(), tr2.end(), [](auto &left, auto &right) {
+        return left.second < right.second;
+      });
+
+      std::vector<std::pair<int,int>> inter;
+      std::set_intersection(tr1.begin(), tr1.end(),
+                            tr2.begin(), tr2.end(),
+                            std::back_inserter(inter));
+            
+      if (inter.size() >= min_matches){
+        intersect.push_back(std::make_pair(i, j));
+      }
+    } 
+  }
+
+  return intersect;
+}
+
+
+
+
+
+std::vector<int> IntersectFrames(std::vector<Image> &img1,
+                                 std::vector<Image> &img2) {
+
+    std::vector<int> intersect;
+
+    std::vector<int> frames_base;
+    for (int i = 0; i < img1.size(); i++) {
+        frames_base.push_back(img1[i].image_id_);
+    }
+
+    std::vector<int> frames_float;
+    for (int i = 0; i < img2.size(); i++) {
+        frames_float.push_back(img2[i].image_id_);
+    }
+
+    std::sort(frames_base.begin(), frames_base.end());
+    std::sort(frames_float.begin(), frames_float.end());
+
+    std::set_intersection(frames_base.begin(), frames_base.end(),
+                          frames_float.begin(), frames_float.end(),
+                          back_inserter(intersect));
+
+    return intersect;
+}
 
 
 

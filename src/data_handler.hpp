@@ -35,7 +35,7 @@ void StringTrim(std::string* str) {
 
 
 
-void ReadImages(std::string path, std::vector<Point3D>& points) {
+void ReadImages(std::string path, std::vector<Image>& images) {
 
   std::ifstream file(path);
   if (!file.is_open()) {
@@ -54,43 +54,42 @@ void ReadImages(std::string path, std::vector<Point3D>& points) {
 
     std::stringstream line_stream1(line);
 
+    Image image;
+
     // ID
     std::getline(line_stream1, item, ' ');
-    int image_id = std::stoul(item);
-
-    Eigen::Vector4d qvec;
-    Eigen::Vector3d tvec;
+    image.image_id_ = std::stoul(item);
 
     // QVEC (qw, qx, qy, qz)
     std::getline(line_stream1, item, ' ');
-    qvec(0) = std::stold(item);
+    image.qvec_(0) = std::stold(item);
 
     std::getline(line_stream1, item, ' ');
-    qvec(1) = std::stold(item);
+    image.qvec_(1) = std::stold(item);
 
     std::getline(line_stream1, item, ' ');
-    qvec(2) = std::stold(item);
+    image.qvec_(2) = std::stold(item);
 
     std::getline(line_stream1, item, ' ');
-    qvec(3) = std::stold(item);
+    image.qvec_(3) = std::stold(item);
 
     // TVEC
     std::getline(line_stream1, item, ' ');
-    tvec(0) = std::stold(item);
+    image.tvec_(0) = std::stold(item);
 
     std::getline(line_stream1, item, ' ');
-    tvec(1) = std::stold(item);
+    image.tvec_(1) = std::stold(item);
 
     std::getline(line_stream1, item, ' ');
-    tvec(2) = std::stold(item);
+    image.tvec_(2) = std::stold(item);
 
     // CAMERA_ID
     std::getline(line_stream1, item, ' ');
-    int CameraId = std::stoul(item);
+    image.camera_id_ = std::stoul(item);
 
     // NAME
     std::getline(line_stream1, item, ' ');
-    std::string image_name = item;
+    image.name_ = item;
 
     // POINTS2D
     if (!std::getline(file, line)) {
@@ -99,10 +98,6 @@ void ReadImages(std::string path, std::vector<Point3D>& points) {
 
     StringTrim(&line);
     std::stringstream line_stream2(line);
-
-    std::vector<Eigen::Vector2d> points2D;
-    std::vector<int> point3D_ids;
-    std::vector<int> point3Dd_ids;    //IC05
 
     if (!line.empty()) {
       while (!line_stream2.eof()) {
@@ -114,12 +109,25 @@ void ReadImages(std::string path, std::vector<Point3D>& points) {
         std::getline(line_stream2, item, ' ');
         point.y() = std::stold(item);
 
+        image.points2D_.push_back(point);
+
         std::getline(line_stream2, item, ' ');
+        if (item == "-1") {
+          image.point2D_point3D_.push_back(-1);
+        } else {
+          image.point2D_point3D_.push_back(std::stoll(item));
+        }
+
         std::getline(line_stream2, item, ' ');
+        if (item == "-1") {
+          image.point2D_point3Dd_.push_back(-1);
+        } else {
+          image.point2D_point3Dd_.push_back(std::stoll(item));
+        }
       }
     }
 
-    points.push_back(Point3D(tvec));
+    images.push_back(image);
   }
 }
 
@@ -144,13 +152,11 @@ void ReadPoints3D(std::string path, std::vector<Point3D>& points) {
 
     std::stringstream line_stream(line);
 
+    Point3D point;
+
     // ID
     std::getline(line_stream, item, ' ');
-    const int point3D_id = std::stoll(item);
-
-    // Make sure, that we can add new 3D points after reading 3D points
-    // without overwriting existing 3D points.
-    //model.num_added_points3D_ = std::max(model.num_added_points3D_, point3D_id);
+    point.id_ = std::stoll(item);
 
     // XYZ
     std::getline(line_stream, item, ' ');
@@ -162,9 +168,7 @@ void ReadPoints3D(std::string path, std::vector<Point3D>& points) {
     std::getline(line_stream, item, ' ');
     double z = std::stold(item);
 
-    class Point3D point3D;
-    point3D.id_ = point3D_id;
-    point3D.xyz_ = Eigen::Vector3d(x, y, z);
+    point.xyz_ = Eigen::Vector3d(x, y, z);
 
     // Color
     std::getline(line_stream, item, ' ');
@@ -176,9 +180,11 @@ void ReadPoints3D(std::string path, std::vector<Point3D>& points) {
     std::getline(line_stream, item, ' ');
     double color2 = static_cast<uint8_t>(std::stoi(item));
 
+    point.color_ = Eigen::Vector3d(color0, color1, color2);
+
     // ERROR
     std::getline(line_stream, item, ' ');
-    auto berror = std::stold(item);
+    point.error_ = std::stold(item);
 
 
     // TRACK
@@ -190,13 +196,17 @@ void ReadPoints3D(std::string path, std::vector<Point3D>& points) {
       if (item.empty()) {
         break;
       }
-      int image_id = std::stoul(item);
+      int track_image = std::stoul(item);
+      //point.track_images.push_back(std::stoul(item));
 
       std::getline(line_stream, item, ' ');
-      int point2D_idx = std::stoul(item);
+      int track_point = std::stoul(item);
+      //point.track_points.push_back(std::stoul(item));
+
+      point.track_.push_back(std::make_pair(track_image, track_point));
     }
 
-    points.push_back(point3D);
+    points.push_back(point);
   }
   
 }

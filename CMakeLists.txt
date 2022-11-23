@@ -47,6 +47,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 add_executable(ciltri
   src/types.hpp
+  src/img_vis.hpp
+  src/mesh_manager.hpp
   src/utils.hpp
   src/data_handler.hpp
   src/viewer.hpp
@@ -57,5 +59,6 @@ target_link_libraries(ciltri
     ${PCL_LIBRARIES} 
     ${VTK_LIBRARIES} 
     Boost::thread
+    ${OpenCV_LIBS}
 )
 
