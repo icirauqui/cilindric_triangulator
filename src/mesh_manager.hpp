@@ -85,198 +85,6 @@ class MeshManager {
 
 
 
-/*
-
-  bool MLS() {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr pc_01(new pcl::PointCloud<pcl::PointXYZ> (pc_t_0));
-
-    // Create KD-Tree & MLS & set parameters
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
-    mls.setComputeNormals (true);
-    mls.setInputCloud (pc_01);
-    //mls.setPolynomialFit (true);
-    mls.setSearchMethod (tree);
-    mls.setSearchRadius (mls_search_radius_);	//900000 //100 //0.25    // Original 0.03 // Default 0.00
-    mls.setPolynomialOrder(mls_polynomial_order_); //3 //50 // Default 2
-
-    int out_indices = 0;
-    int mls_iterations = 0;
-
-    mls_polynomial_order_ = 1;
-
-    do {
-      std::cout << " - MLS curr search radious: (" << mls_iterations << ") " 
-                                                   << mls_search_radius_ << std::endl;
-
-      mls.process(pc_t_1);
-
-      // Get corresponding indexes: for each output point, returns the index of the input one.
-      pcl::PointIndicesPtr pIdx1 = mls.getCorrespondingIndices();
-      vtindices.clear();
-      for (unsigned int i=0; i<pIdx1->indices.size(); i++)
-        vtindices.push_back(pIdx1->indices[i]);
-
-      out_indices = vtindices.size();
-
-      if (out_indices == 0) {
-        mls_search_radius_ *= 1.1;
-        mls_iterations++;
-      }
-
-    } while (out_indices < 0.75*pc_01->points.size());
-
-
-    std::cout << "pc_01 size: " << pc_01->points.size() << std::endl;
-//    mls.process (pc_t_1);
-//
-//    // Get corresponding indexes: for each output point, returns the index of the input one.
-//    pcl::PointIndicesPtr pIdx1 = mls.getCorrespondingIndices();
-//    for (unsigned int i=0; i<pIdx1->indices.size(); i++)
-//      vtindices.push_back(pIdx1->indices[i]);
-
-    std::cout << "MLS: " << vtindices.size() << std::endl;
-    int idxit = 0;
-    for (unsigned int i=0; i<vMPsXYZN_.size(); i++) {
-      int currentpos = i;
-      if (currentpos==vtindices[idxit]) {
-        vbtMPsActive_[i] = true;
-        idxit++;
-      }
-      else {
-        vbtMPsActive_[i] = false;
-      }
-    }
-
-    if (pc_t_1.width>0)
-        return true;
-    else
-        return false;
-}
-
-
-
-  bool ComputeMesh() {
-    // TRIANGULATION, GREEDY PROJECTION
-    pcl::PointCloud<pcl::PointNormal>::Ptr ptr_pc_t_mesh_1 (new pcl::PointCloud<pcl::PointNormal> (pc_t_1));
-
-    // Search tree
-    pcl::search::KdTree<pcl::PointNormal>::Ptr tree (new pcl::search::KdTree<pcl::PointNormal>);
-    tree->setInputCloud (ptr_pc_t_mesh_1);
-
-    // Greedy Projection
-    static pcl::GreedyProjectionTriangulation<pcl::PointNormal> GreedyProj3;
-
-    GreedyProj3.setMu (mesh_mu_);    // original 2.8
-    GreedyProj3.setSearchRadius(mesh_search_radius_);      // original 0.50
-    GreedyProj3.setMaximumNearestNeighbors (mesh_max_neighbours_);        // original 150
-    GreedyProj3.setMaximumSurfaceAngle(mesh_surf_angle_*M_PI/180); // 45 degrees
-    GreedyProj3.setMinimumAngle(mesh_min_angle_*M_PI/180); // 10 degrees
-    GreedyProj3.setMaximumAngle(mesh_max_angle_*M_PI/180); // 120 degrees 2/3
-    GreedyProj3.setNormalConsistency(true);
-
-    GreedyProj3.setInputCloud (ptr_pc_t_mesh_1);
-    GreedyProj3.setSearchMethod (tree);
-    GreedyProj3.reconstruct (mesh_t);
-
-    if (mesh_t.polygons.size()>0) {
-        // Get the vertex indexes of each triangle
-        for (unsigned int i=0; i<mesh_t.polygons.size(); i++) {
-            unsigned int nver0 = mesh_t.polygons[i].vertices[0];
-            unsigned int nver1 = mesh_t.polygons[i].vertices[1];
-            unsigned int nver2 = mesh_t.polygons[i].vertices[2];
-
-            std::vector<int> triangle;
-            triangle.push_back(nver0);
-            triangle.push_back(nver1);
-            triangle.push_back(nver2);
-            triangles_t.push_back(triangle);
-
-            //std::vector<Point3D*> vpMP2Draw;
-            //vpMP2Draw.push_back(vpMPs_t[vtindices[nver0]]);
-            //vpMP2Draw.push_back(vpMPs_t[vtindices[nver1]]);
-            //vpMP2Draw.push_back(vpMPs_t[vtindices[nver2]]);
-            //vpMPs2Draw.push_back(vpMP2Draw);
-        }
-
-        return true;
-    }
-    else {
-        cout << "No data" << endl;
-        return false;
-    }
-}
-
-*/
-
-
-
-  bool ComputeMeshPlanar() {
-
-    float mesh_mu_ = 2.5;
-    float mesh_search_radius_ = 1.0;
-    int mesh_max_neighbours_ = 25;
-    int mesh_surf_angle_ = 150;
-    int mesh_min_angle_ = 5;
-    int mesh_max_angle_ = 85;
-
-
-    std::cout << pc0.width << " " << pc0.height << std::endl;
-
-
-    // TRIANGULATION, GREEDY PROJECTION
-    pcl::PointCloud<pcl::PointNormal>::Ptr ptr_pc_t_mesh_1 (new pcl::PointCloud<pcl::PointNormal> (pc0));
-
-    // Search tree
-    pcl::search::KdTree<pcl::PointNormal>::Ptr tree (new pcl::search::KdTree<pcl::PointNormal>);
-    tree->setInputCloud (ptr_pc_t_mesh_1);
-
-    // Greedy Projection
-    static pcl::GreedyProjectionTriangulation<pcl::PointNormal> GreedyProj3;
-
-    GreedyProj3.setMu (mesh_mu_);    // original 2.8
-    GreedyProj3.setSearchRadius(mesh_search_radius_);      // original 0.50
-    GreedyProj3.setMaximumNearestNeighbors (mesh_max_neighbours_);        // original 150
-    GreedyProj3.setMaximumSurfaceAngle(mesh_surf_angle_*M_PI/180); // 45 degrees
-    GreedyProj3.setMinimumAngle(mesh_min_angle_*M_PI/180); // 10 degrees
-    GreedyProj3.setMaximumAngle(mesh_max_angle_*M_PI/180); // 120 degrees 2/3
-    GreedyProj3.setNormalConsistency(true);
-
-    GreedyProj3.setInputCloud (ptr_pc_t_mesh_1);
-    GreedyProj3.setSearchMethod (tree);
-    GreedyProj3.reconstruct (mesh_t);
-
-    if (mesh_t.polygons.size()>0) {
-        // Get the vertex indexes of each triangle
-        for (unsigned int i=0; i<mesh_t.polygons.size(); i++) {
-            unsigned int nver0 = mesh_t.polygons[i].vertices[0];
-            unsigned int nver1 = mesh_t.polygons[i].vertices[1];
-            unsigned int nver2 = mesh_t.polygons[i].vertices[2];
-
-            std::vector<int> triangle;
-            triangle.push_back(nver0);
-            triangle.push_back(nver1);
-            triangle.push_back(nver2);
-            triangles_t.push_back(triangle);
-
-            //std::vector<Point3D*> vpMP2Draw;
-            //vpMP2Draw.push_back(vpMPs_t[vtindices[nver0]]);
-            //vpMP2Draw.push_back(vpMPs_t[vtindices[nver1]]);
-            //vpMP2Draw.push_back(vpMPs_t[vtindices[nver2]]);
-            //vpMPs2Draw.push_back(vpMP2Draw);
-        }
-
-        return true;
-    }
-    else {
-        cout << "No data" << endl;
-        return false;
-    }
-  }
-
-
-
-
   std::vector<std::vector<int>> Triangulate() {
     
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ> (pc_t_0));
@@ -369,56 +177,41 @@ class MeshManager {
 
 
 
-    std::vector<Point3D*> vpMPs;
-    std::vector<std::vector<float>> vMPsXYZN_;
-    std::vector<MeshSet*> mesh_sets_;
+  std::vector<Point3D*> vpMPs;
+  std::vector<std::vector<float>> vMPsXYZN_;
+  std::vector<MeshSet*> mesh_sets_;
 
-    // Staring PointCloud
-    pcl::PointCloud<pcl::PointNormal> pc0;
-    pcl::PointCloud<pcl::PointXYZ> pc_t_0;
+  // Staring PointCloud
+  pcl::PointCloud<pcl::PointNormal> pc0;
+  pcl::PointCloud<pcl::PointXYZ> pc_t_0;
 
-    // Smoothed PointCloud (MLS)
-    pcl::PointCloud<pcl::PointNormal> pc_t_1;
-    std::vector<int> vtindices;
+  // Smoothed PointCloud (MLS)
+  pcl::PointCloud<pcl::PointNormal> pc_t_1;
+  std::vector<int> vtindices;
 
-    // Reconstructed mesh
-    pcl::PolygonMesh mesh_t;
-    std::vector<std::vector<int> > triangles_t;
-    std::vector<std::vector<Point3D*> > vpMPs2Draw;
+  // Reconstructed mesh
+  pcl::PolygonMesh mesh_t;
+  std::vector<std::vector<int> > triangles_t;
+  std::vector<std::vector<Point3D*> > vpMPs2Draw;
     
-    // Set Points as active or not
-    std::vector<bool> vbtMPsActive_;
+  // Set Points as active or not
+  std::vector<bool> vbtMPsActive_;
 
-    // Interface 
-    float mls_search_radius_ = 1.0;
-    int mls_polynomial_order_ = 3;
-
-
-
-
-
-
-    float mesh_mu_ = 2.5;
-    float mesh_search_radius_ = 1.0;
-    int mesh_max_neighbours_ = 25;
-    int mesh_surf_angle_ = 150;
-    int mesh_min_angle_ = 5;
-    int mesh_max_angle_ = 85;
+  // Interface 
+  float mls_search_radius_ = 1.0;
+  int mls_polynomial_order_ = 3;
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
+  float mesh_mu_ = 2.5;
+  float mesh_search_radius_ = 1.0;
+  int mesh_max_neighbours_ = 25;
+  int mesh_surf_angle_ = 150;
+  int mesh_min_angle_ = 5;
+  int mesh_max_angle_ = 85;
 
 };
 
